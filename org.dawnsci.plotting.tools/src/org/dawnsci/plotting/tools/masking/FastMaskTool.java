@@ -206,6 +206,21 @@ public class FastMaskTool extends AbstractToolPage {
 
 
 		});
+		
+		Button b5 = new Button(control, SWT.PUSH);
+		b5.setText("Clear");
+		b5.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				buffer.clear();
+				IImageTrace imageTrace = getImageTrace();
+				imageTrace.setMask(buffer.getMask());
+				
+			}
+
+
+		});
 	}
 
 	@Override
@@ -261,7 +276,6 @@ public class FastMaskTool extends AbstractToolPage {
 	private class FastMaskJob extends Job {
 
 		private Runnable runnable;
-		int count = 0;
 		
 		public FastMaskJob() {
 			super("Apply Mask");
@@ -275,11 +289,6 @@ public class FastMaskTool extends AbstractToolPage {
 		protected IStatus run(IProgressMonitor monitor) {
 			Runnable r = runnable;
 			r.run();
-			count++;
-			
-			if (count > 10) {
-				
-			count = 0;
 			
 			Display.getDefault().syncExec(new Runnable() {
 				
@@ -290,7 +299,6 @@ public class FastMaskTool extends AbstractToolPage {
 					System.out.println(System.currentTimeMillis() - t);
 				}
 			});
-			}
 			return Status.OK_STATUS;
 		}
 		

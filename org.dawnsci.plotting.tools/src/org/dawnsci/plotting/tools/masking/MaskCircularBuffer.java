@@ -32,6 +32,8 @@ public class MaskCircularBuffer {
 		int iStart = (int)Math.floor(bounds.getPointY());
 		int iStop = (int)Math.ceil(bounds.getPointY()+bounds.getLength(1));
 		
+		iStart = iStart > 0 ? iStart : 0;
+		iStop = iStop <= shape[1]-2 ? iStop : shape[1]-2;
 		for (int i = iStart; i < iStop; i++) {
 			double[] hi = roi.findHorizontalIntersections(i);
 			if (hi != null) {
@@ -104,6 +106,16 @@ public class MaskCircularBuffer {
 			mask.setAbs(iterator.index, (int)(v & ~bitMask));
 		}
 		
+	}
+	
+	public void clear(){
+		bitMask = 1;
+		looped = false;
+		IndexIterator iterator = mask.getIterator();
+		
+		while (iterator.hasNext()) {
+			mask.setAbs(iterator.index, 0);
+		}
 	}
 	
 	private void freeNextSlot(){
